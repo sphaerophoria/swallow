@@ -1,0 +1,6 @@
+[package]
+name = "clangize"
+version = "0.1.0"
+authors = ["Mick Sayson <mick@sayson.com>"]
+
+[dependencies]
