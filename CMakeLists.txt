@@ -3,6 +3,10 @@ include(ExternalProject)
 
 project(swallow)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_subdirectory(swallow_client)
 
 ExternalProject_Add(
@@ -12,8 +16,10 @@ ExternalProject_Add(
   SOURCE_DIR "${CMAKE_SOURCE_DIR}/swallow"
   BINARY_DIR "${CMAKE_SOURCE_DIR}/swallow"
   BUILD_ALWAYS 1
-  INSTALL_COMMAND ""
+  INSTALL_COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}/swallow/release/swallow ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+  INSTALL_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/swallow/release/swallow
   DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+

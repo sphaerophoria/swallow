@@ -1,18 +1,18 @@
-extern crate swallow;
+extern crate clangize;
 #[macro_use]
 extern crate common_failures;
 extern crate failure;
+#[macro_use]
+extern crate lazy_static;
+extern crate pretty_env_logger;
 extern crate serde;
-#[macro_use] 
+#[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 extern crate structopt;
 #[macro_use]
 extern crate structopt_derive;
-extern crate clangize;
-#[macro_use]
-extern crate lazy_static;
-extern crate pretty_env_logger;
+extern crate swallow;
 
 use common_failures::prelude::*;
 use std::process::Command;
@@ -29,15 +29,15 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 struct Opt {
     /// compile_commands.json formatted output file
-    #[structopt(short="-o", long="--output", default_value="compile_commands.json")]
+    #[structopt(short = "-o", long = "--output", default_value = "compile_commands.json")]
     output: String,
 
     /// Clangize the command
-    #[structopt(short="-c", long="--clangize")]
+    #[structopt(short = "-c", long = "--clangize")]
     clangize: bool,
 
     /// Command to swallow
-    #[structopt(default_value="make")]
+    #[structopt(default_value = "make")]
     cmd: Vec<String>,
 }
 
@@ -90,9 +90,10 @@ fn try_main() -> Result<()> {
     while command_server.is_running() {
         let recv_timeout = Duration::new(0, 50_000_000);
         while let Ok(command) = command_server.recv_timeout(recv_timeout) {
-            let cmdline = match OPTIONS.clangize {
-                true => clangizer.clangize(command.command).join(" "),
-                false => command.command.join(" "),
+            let cmdline = if OPTIONS.clangize {
+                clangizer.clangize(command.command).join(" ")
+            } else {
+                command.command.join(" ")
             };
 
             let entry = CommandEntry {

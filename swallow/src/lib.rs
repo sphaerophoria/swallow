@@ -102,8 +102,16 @@ fn forward_ipc_calls(tx: Sender<CompilationCommand>) {
 
 impl CommandServer {
     pub fn new(mut cmd: Command) -> Result<CommandServer, IoError> {
+        let libswallow_client_path = std::env::current_exe()?
+            .parent()
+            .ok_or_else(|| IoError::new(std::io::ErrorKind::NotFound, "Failed to get LD_PRELOAD"))?
+            .parent()
+            .ok_or_else(|| IoError::new(std::io::ErrorKind::NotFound, "Failed to get LD_PRELOAD"))?
+            .join("lib")
+            .join("libswallow_client.so");
+
         let child = cmd.env("COMPILE_COMMAND_CHANNEL", SOCKET_PATH)
-            .env("LD_PRELOAD", "libswallow_client.so")
+            .env("LD_PRELOAD", libswallow_client_path)
             .spawn()?;
 
         let (tx, rx) = mpsc::channel();

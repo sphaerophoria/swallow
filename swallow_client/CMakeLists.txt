@@ -1,7 +1,6 @@
 include(CheckFunctionExists)
 include(CheckSymbolExists)
 include(CheckIncludeFile)
-include(GNUInstallDirs)
 include(CheckCCompilerFlag)
 
 check_c_compiler_flag("-std=c99" C99_SUPPORTED)
